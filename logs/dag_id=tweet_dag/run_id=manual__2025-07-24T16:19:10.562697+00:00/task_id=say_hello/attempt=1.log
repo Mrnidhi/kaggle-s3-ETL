@@ -1,0 +1,12 @@
+{"timestamp":"2025-07-24T16:21:12.044955","level":"info","event":"DAG bundles loaded: dags-folder, example_dags","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager"}
+{"timestamp":"2025-07-24T16:21:12.048702","level":"info","event":"Filling up the DagBag from /home/ubuntu/airflow/dag/twitter_dag.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-07-24T16:21:13.234424Z","level":"info","event":"Task instance is in running state","chan":"stdout","logger":"task"}
+{"timestamp":"2025-07-24T16:21:13.234593Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.QUEUED","chan":"stdout","logger":"task"}
+{"timestamp":"2025-07-24T16:21:13.234678Z","level":"info","event":"Current task name:say_hello","chan":"stdout","logger":"task"}
+{"timestamp":"2025-07-24T16:21:13.234748Z","level":"info","event":"Dag name:tweet_dag","chan":"stdout","logger":"task"}
+{"timestamp":"2025-07-24T16:21:13.238678Z","level":"info","event":"Dataset URL: https://www.kaggle.com/datasets/mmmarchetti/tweets-dataset","chan":"stdout","logger":"task"}
+{"timestamp":"2025-07-24T16:21:19.410566Z","level":"info","event":"Could not delete zip file, got [Errno 2] No such file or directory: 'data/tweets-dataset.zip'","chan":"stdout","logger":"task"}
+{"timestamp":"2025-07-24T16:22:11.671996","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator"}
+{"timestamp":"2025-07-24T16:22:11.861275Z","level":"info","event":"Task instance in success state","chan":"stdout","logger":"task"}
+{"timestamp":"2025-07-24T16:22:11.861431Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.RUNNING","chan":"stdout","logger":"task"}
+{"timestamp":"2025-07-24T16:22:11.861515Z","level":"info","event":"Task operator:<Task(PythonOperator): say_hello>","chan":"stdout","logger":"task"}
