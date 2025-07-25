@@ -1,0 +1,22 @@
+# Ignore all .pyc files
+*.pyc
+
+# Ignore virtual environment folder
+venv/
+airflow_venv/
+
+# Ignore credentials
+*.json
+*.pem
+.env
+
+# Ignore data files
+*.csv
+*.zip
+
+# Ignore system files
+.DS_Store
+__pycache__/
+
+# Ignore logs
+*.log
