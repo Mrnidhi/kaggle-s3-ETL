@@ -1,111 +1,110 @@
-# KaggleS3Pipeline Setup Guide
+# How to Set Up This Project
 
-## 🎉 **Great News!**
-Your project is almost ready! The Kaggle download is working perfectly. Here's what's left to complete:
+This guide will help you set up the Kaggle to S3 pipeline on your computer.
 
-## ✅ **What's Already Working:**
-- ✅ Python virtual environment created
-- ✅ All dependencies installed
-- ✅ Kaggle credentials configured
-- ✅ Kaggle dataset download working
-- ✅ Standalone script created
+## What You Need
 
-## 🔧 **Remaining Setup:**
+Before starting, make sure you have:
+- Python 3.8 or higher installed
+- A Kaggle account
+- An AWS account
 
-### **1. Configure AWS Credentials**
-You need to set up AWS credentials for S3 access. Choose one method:
+## Step 1: Download the Project
 
-#### **Option A: AWS CLI Configuration (Recommended)**
+First, download this project to your computer:
 ```bash
-# Configure AWS credentials
-aws configure
-
-# You'll be prompted for:
-# - AWS Access Key ID: [Enter your access key]
-# - AWS Secret Access Key: [Enter your secret key]
-# - Default region: us-east-1 (or your preferred region)
-# - Default output format: json
+git clone https://github.com/Mrnidhi/kaggle-s3-ETL.git
+cd kaggle-s3-ETL
 ```
 
-#### **Option B: Environment Variables**
+## Step 2: Install Python Packages
+
+Create a virtual environment and install the required packages:
 ```bash
-# Set environment variables
-export AWS_ACCESS_KEY_ID=your_access_key_here
-export AWS_SECRET_ACCESS_KEY=your_secret_key_here
-export AWS_DEFAULT_REGION=us-east-1
+python3 -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-#### **Option C: AWS Credentials File**
-```bash
-# Create credentials file
-mkdir -p ~/.aws
-nano ~/.aws/credentials
+## Step 3: Get Kaggle Credentials
 
-# Add your credentials:
-[default]
-aws_access_key_id = your_access_key_here
-aws_secret_access_key = your_secret_key_here
+1. Go to [Kaggle](https://www.kaggle.com) and sign in
+2. Click on your profile picture → Account
+3. Scroll down to "API" section
+4. Click "Create New API Token"
+5. Download the kaggle.json file
+6. Open the file and copy your username and key
+
+## Step 4: Update the Script
+
+Open `kaggle_to_s3.py` and change these lines:
+```python
+KAGGLE_USERNAME = "your_kaggle_username"
+KAGGLE_KEY = "your_kaggle_key"
+S3_BUCKET = "your_s3_bucket_name"
 ```
 
-### **2. Get AWS Credentials**
-To get your AWS credentials:
+## Step 5: Set Up AWS
+
 1. Go to [AWS Console](https://aws.amazon.com/console/)
-2. Navigate to IAM → Users → Your User
-3. Go to "Security credentials" tab
-4. Create access keys
-5. Save the Access Key ID and Secret Access Key
-
-### **3. Test the Pipeline**
-Once AWS credentials are configured:
+2. Create an S3 bucket or use an existing one
+3. Get your AWS access keys:
+   - Go to IAM → Users → Your User
+   - Security credentials → Create access key
+4. Configure AWS on your computer:
 ```bash
-# Activate virtual environment
-source airflow_venv/bin/activate
+aws configure
+```
 
-# Run the pipeline
+## Step 6: Test Everything
+
+Test if AWS is working:
+```bash
+python test_aws.py
+```
+
+## Step 7: Run the Pipeline
+
+Now you can run the main script:
+```bash
 python kaggle_to_s3.py
 ```
 
-## 🚀 **Expected Output:**
-```
-2025-08-03 02:37:08,061 - INFO - Starting Kaggle to S3 pipeline
-2025-08-03 02:37:08,061 - INFO - Kaggle credentials configured successfully
-2025-08-03 02:37:08,064 - INFO - Downloading dataset: mmmarchetti/tweets-dataset
-2025-08-03 02:37:08,956 - INFO - Dataset downloaded successfully
-2025-08-03 02:37:09,044 - INFO - Uploading /tmp/tweets_data/tweets.csv to s3://airflow-ec2-s3/kaggle/tweets.csv
-2025-08-03 02:37:09,055 - INFO - Upload successful!
-2025-08-03 02:37:09,055 - INFO - Pipeline completed successfully!
-```
+## What Should Happen
 
-## 📁 **Project Structure:**
+When you run the script, you should see messages like:
 ```
-kaggle_to_s3/
-├── kaggle_to_s3.py          # Main pipeline script
-├── dag/twitter_dag.py       # Airflow DAG (for reference)
-├── requirements.txt         # Python dependencies
-├── airflow_venv/           # Virtual environment
-├── README.md               # Project documentation
-└── SETUP.md               # This setup guide
+2025-08-03 02:50:44 - INFO - Starting Kaggle to S3 pipeline
+2025-08-03 02:50:44 - INFO - Kaggle credentials configured successfully
+2025-08-03 02:50:44 - INFO - Downloading dataset: mmmarchetti/tweets-dataset
+2025-08-03 02:50:45 - INFO - Dataset downloaded successfully
+2025-08-03 02:50:45 - INFO - Uploading /tmp/tweets_data/tweets.csv to s3://your-bucket/kaggle/tweets.csv
+2025-08-03 02:50:46 - INFO - Upload successful!
+2025-08-03 02:50:46 - INFO - Pipeline completed successfully!
 ```
 
-## 🔍 **What the Pipeline Does:**
-1. **Downloads** tweets dataset from Kaggle (`mmmarchetti/tweets-dataset`)
-2. **Saves** to local directory (`/tmp/tweets_data/`)
-3. **Uploads** to your S3 bucket (`airflow-ec2-s3/kaggle/tweets.csv`)
+## Troubleshooting
 
-## 🎯 **Next Steps:**
-1. Configure AWS credentials using one of the methods above
-2. Run `python kaggle_to_s3.py`
-3. Check your S3 bucket for the uploaded file
-4. Celebrate! 🎉
+### If AWS doesn't work:
+- Make sure you ran `aws configure`
+- Check if your S3 bucket exists
+- Verify your AWS permissions
 
-## 💡 **Optional: Schedule the Pipeline**
-You can schedule this script to run automatically using:
-- **Cron jobs** (Linux/Mac)
-- **Task Scheduler** (Windows)
-- **Cloud services** (AWS Lambda, Google Cloud Functions)
+### If Kaggle doesn't work:
+- Check your username and key in the script
+- Make sure your Kaggle account is active
 
-## 🆘 **Need Help?**
-If you encounter any issues:
-1. Check that AWS credentials are properly configured
-2. Verify your S3 bucket exists and is accessible
-3. Ensure you have the necessary AWS permissions (S3:PutObject) 
+### If Python packages fail to install:
+- Make sure you're using Python 3.8 or higher
+- Try updating pip: `pip install --upgrade pip`
+
+## Need Help?
+
+If you get stuck, check:
+1. All credentials are correct
+2. You have internet connection
+3. Your AWS and Kaggle accounts are active
+
+---
+
+*This setup guide was written to help others use this project easily.*
