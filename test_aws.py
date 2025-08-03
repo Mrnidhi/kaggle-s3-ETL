@@ -6,19 +6,16 @@ Test AWS credentials and S3 access
 import boto3
 import logging
 
-# Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 def test_aws_credentials():
     """Test AWS credentials and S3 access"""
     try:
-        # Test S3 client creation
         s3 = boto3.client('s3')
         logger.info("✅ AWS credentials are valid")
         
-        # Test bucket access
-        bucket_name = "kaggle-data-pipeline"  # Change this to your bucket name
+        bucket_name = "kaggle-data-pipeline"
         try:
             s3.head_bucket(Bucket=bucket_name)
             logger.info(f"✅ S3 bucket '{bucket_name}' is accessible")
@@ -39,4 +36,4 @@ def test_aws_credentials():
 
 if __name__ == "__main__":
     logger.info("Testing AWS credentials and S3 access...")
-    test_aws_credentials() 
+    test_aws_credentials()

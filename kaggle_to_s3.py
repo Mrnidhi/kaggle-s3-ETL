@@ -1,41 +1,34 @@
 #!/usr/bin/env python3
 """
 Kaggle to S3 Data Pipeline
-A standalone script that downloads datasets from Kaggle and uploads them to S3
+Downloads datasets from Kaggle and uploads them to Amazon S3
 """
 
 import os
 import sys
 import boto3
 from kaggle.api.kaggle_api_extended import KaggleApi
-import zipfile
 import logging
-from datetime import datetime
 
-# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
 
-# Your credentials (already configured in the DAG)
 KAGGLE_USERNAME = "mr0nidhi"
 KAGGLE_KEY = "cf03d31f447c6031c1a039911310445c"
-S3_BUCKET = "kaggle-data-pipeline"  # Change this to your bucket name
+S3_BUCKET = "kaggle-data-pipeline"
 
 def setup_kaggle_credentials():
     """Setup Kaggle API credentials"""
     try:
-        # Set environment variables
         os.environ["KAGGLE_USERNAME"] = KAGGLE_USERNAME
         os.environ["KAGGLE_KEY"] = KAGGLE_KEY
         
-        # Create kaggle directory if it doesn't exist
         kaggle_dir = os.path.expanduser("~/.kaggle")
         os.makedirs(kaggle_dir, exist_ok=True)
         
-        # Create kaggle.json file
         kaggle_json = os.path.join(kaggle_dir, "kaggle.json")
         if not os.path.exists(kaggle_json):
             import json
@@ -99,17 +92,14 @@ def main():
     """Main execution function"""
     logger.info("Starting Kaggle to S3 pipeline")
     
-    # Step 1: Setup credentials
     if not setup_kaggle_credentials():
         logger.error("Failed to setup credentials. Exiting.")
         sys.exit(1)
     
-    # Step 2: Download from Kaggle
     if not download_tweets_from_kaggle():
         logger.error("Failed to download from Kaggle. Exiting.")
         sys.exit(1)
     
-    # Step 3: Upload to S3
     if not upload_to_s3():
         logger.error("Failed to upload to S3. Exiting.")
         sys.exit(1)
@@ -117,4 +107,4 @@ def main():
     logger.info("Pipeline completed successfully!")
 
 if __name__ == "__main__":
-    main() 
+    main()
