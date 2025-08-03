@@ -1,136 +1,143 @@
-🐦 Fetching Tweets from Kaggle and Uploading to S3 using Airflow
-This project demonstrates an end-to-end data pipeline using Apache Airflow that:
+# 🐦 KaggleS3Pipeline
 
-Downloads a Tweets Dataset from Kaggle
+A Python data pipeline that automatically downloads Twitter datasets from Kaggle and uploads them to Amazon S3.
 
-Processes it (optional)
+## 🚀 Features
 
-Uploads the dataset to an Amazon S3 bucket
+- **Automated Data Collection**: Downloads Twitter datasets from Kaggle
+- **Cloud Storage**: Uploads data to Amazon S3 for secure storage
+- **Error Handling**: Robust error handling and logging
+- **Easy Setup**: Simple configuration and deployment
 
-📁 Project Structure
-bash
-Copy
-Edit
-├── dags/
-│   └── tweet_pipeline.py         # Airflow DAG
-├── .env                          # Environment variables (not committed)
-├── requirements.txt              # Python dependencies
-├── README.md                     # Project documentation
-⚙️ Technologies Used
-Apache Airflow
+## 📁 Project Structure
 
-Python 3
+```
+kaggle_to_s3/
+├── kaggle_to_s3.py          # Main pipeline script
+├── test_aws.py              # AWS credentials tester
+├── requirements.txt         # Python dependencies
+├── README.md               # Project documentation
+├── SETUP.md                # Setup guide
+└── .gitignore              # Git ignore rules
+```
 
-Kaggle API
+## 🛠️ Installation
 
-Amazon S3 (boto3)
+### Prerequisites
+- Python 3.8+
+- AWS Account with S3 access
+- Kaggle Account with API access
 
-AWS EC2 (for hosting Airflow)
+### Setup
 
-VS Code (optional)
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd kaggle_to_s3
+   ```
 
-🔑 Prerequisites
-🐍 Python & Virtual Environment
-bash
-Copy
-Edit
-sudo apt update
-sudo apt install python3 python3-venv python3-pip
-python3 -m venv airflow_venv
-source airflow_venv/bin/activate
-🧪 Install Required Packages
-bash
-Copy
-Edit
-pip install -r requirements.txt
-📦 Required Packages (if you don't use requirements.txt)
-bash
-Copy
-Edit
-pip install airflow boto3 kaggle pandas
-🪪 Kaggle API Setup
-Go to: https://www.kaggle.com > Account > Create API Token
+2. **Create virtual environment**
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
-This will download a file named kaggle.json
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Move it to:
+4. **Configure credentials**
+   - Set up Kaggle API credentials
+   - Configure AWS credentials using `aws configure`
 
-bash
-Copy
-Edit
-mkdir -p ~/.kaggle
-mv /path/to/kaggle.json ~/.kaggle/
-chmod 600 ~/.kaggle/kaggle.json
-OR set environment variables:
+## 🔧 Configuration
 
-bash
-Copy
-Edit
-export KAGGLE_USERNAME=your_username
-export KAGGLE_KEY=your_key
-🪣 AWS S3 Setup
-Create a bucket on S3
+### Kaggle Credentials
+Update the credentials in `kaggle_to_s3.py`:
+```python
+KAGGLE_USERNAME = "your_kaggle_username"
+KAGGLE_KEY = "your_kaggle_key"
+```
 
-Create an IAM user with programmatic access
+### S3 Configuration
+Update the S3 bucket name in `kaggle_to_s3.py`:
+```python
+S3_BUCKET = "your-s3-bucket-name"
+```
 
-Save AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+## 🚀 Usage
 
-Configure AWS CLI:
+### Run the Pipeline
+```bash
+python kaggle_to_s3.py
+```
 
-bash
-Copy
-Edit
-aws configure
-🛠️ DAG: tweet_pipeline.py
-This DAG:
+### Test AWS Credentials
+```bash
+python test_aws.py
+```
 
-Authenticates with Kaggle
+## 📊 Data Flow
 
-Downloads the dataset
+```
+Kaggle Dataset → Local Processing → Amazon S3
+     ↓              ↓              ↓
+  Download      Extract/Store    Cloud Upload
+```
 
-Uploads it to a specified S3 bucket
+### Current Dataset
+- **Source**: `mmmarchetti/tweets-dataset` on Kaggle
+- **Content**: Twitter posts with metadata
+- **Size**: ~7.8MB (58,000+ tweets)
+- **Format**: CSV
 
-Example structure inside DAG:
+## 🔍 Monitoring
 
-python
-Copy
-Edit
-with DAG(...) as dag:
-    fetch_data = PythonOperator(...)
-    upload_to_s3 = PythonOperator(...)
-    fetch_data >> upload_to_s3
-✅ Running the DAG
-Launch Airflow UI:
+### Check Local Files
+```bash
+ls -la /tmp/tweets_data/
+head -5 /tmp/tweets_data/tweets.csv
+```
 
-bash
-Copy
-Edit
-airflow db init
-airflow webserver --port 8080
-airflow scheduler
-Open: http://localhost:8080
+### Check S3 Upload
+```bash
+aws s3 ls s3://your-bucket-name/kaggle/
+```
 
-Enable tweet_pipeline DAG and trigger it.
+## 🛡️ Security
 
-📤 Output
-The final dataset file (e.g., tweets.csv) will be uploaded to:
+- Credentials are stored securely
+- S3 bucket permissions are configurable
+- No sensitive data is committed to Git
 
-arduino
-Copy
-Edit
-s3://your-bucket-name/kaggle/tweets.csv
-📌 Sample DAG Code Snippet
-python
-Copy
-Edit
-def fetch_tweets_from_kaggle():
-    api = KaggleApi()
-    api.authenticate()
-    api.dataset_download_files('your-kaggle-username/tweets-dataset', path='/tmp/', unzip=True)
+## 📈 Future Enhancements
 
-def upload_to_s3():
-    s3 = boto3.client('s3')
-    with open('/tmp/tweets.csv', 'rb') as f:
-        s3.upload_fileobj(f, 'your-bucket-name', 'tweets.csv')
-🏷️ Tags & Hashtags
-#airflow #s3 #kaggle #ETL #python #aws #dags #automation #dataengineering
+- [ ] Schedule automatic runs
+- [ ] Add data processing steps
+- [ ] Support multiple datasets
+- [ ] Add monitoring and alerts
+- [ ] Deploy to cloud services
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🆘 Support
+
+For issues and questions:
+1. Check the [SETUP.md](SETUP.md) guide
+2. Review the error logs
+3. Open an issue on GitHub
+
+---
+
+**Built with ❤️ for data engineering**
