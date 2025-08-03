@@ -2,6 +2,12 @@
 
 I built this project to automatically download Twitter datasets from Kaggle and upload them to Amazon S3. This helps me collect and store social media data for analysis.
 
+## Project Flowchart
+
+Here's a visual representation of how my data pipeline works:
+
+![Data Pipeline Flowchart](image1.png)
+
 ## What This Project Does
 
 This pipeline does three main things:
@@ -27,6 +33,7 @@ kaggle_to_s3/
 ├── requirements.txt         # Lists all Python packages needed
 ├── README.md               # This file
 ├── SETUP.md                # How to set up the project
+├── image1.png              # Data pipeline flowchart
 └── .gitignore              # Tells Git what files to ignore
 ```
 
